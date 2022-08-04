@@ -18,3 +18,60 @@ exports.getCategoryById = (id, cb) => {
     cb(err, res);
   });
 };
+
+exports.createCategory = (data, picture, cb) => {
+  const query =
+    "INSERT INTO categories(name, gender, picture ) VALUES($1, $2, $3) RETURNING *";
+  const values = [data.name, data.gender, picture];
+  db.query(query, values, (err, res) => {
+    if (err) {
+      cb(err);
+    } else {
+      cb(err, res.rows);
+    }
+  });
+};
+
+exports.editCategory = (id, data, picture, cb) => {
+  val = [id];
+  const filtered = {};
+  const obj = {
+    picture,
+    name: data.name,
+    gender: data.gender,
+  };
+
+  for (x in obj) {
+    if (obj[x] !== null) {
+      if (obj[x] !== undefined) {
+        filtered[x] = obj[x];
+        val.push(obj[x]);
+      }
+    }
+  }
+
+  const key = Object.keys(filtered);
+  const finalResult = key.map((val, index) => `${val}=$${index + 2}`);
+  console.log(finalResult);
+  console.log(val);
+
+  const query = `UPDATE categories SET ${finalResult}  WHERE id=$1 RETURNING *`;
+  db.query(query, val, (err, res) => {
+    if (res) {
+      // console.log(res);
+      cb(err, res.rows);
+    } else {
+      console.log(err);
+      cb(err);
+    }
+  });
+};
+
+exports.deleteCategory = (id, cb) => {
+  const query = "DELETE FROM categories WHERE id=$1 RETURNING *";
+  const value = [id];
+  db.query(query, value, (err, res) => {
+    // console.log(res);
+    cb(res.rows);
+  });
+};

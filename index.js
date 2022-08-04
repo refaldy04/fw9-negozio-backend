@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 
+global.__basepath = __dirname;
+
 const cors = require("cors");
 const app = express();
 
@@ -18,11 +20,10 @@ app.get("/", (req, res) => {
   });
 });
 
-
-app.use('*', (req, res) => {
+app.use("*", (req, res) => {
   return res.status(404).json({
     success: false,
-    message: 'Resource not found !!! Something wrong...'
+    message: "Resource not found !!! Something wrong...",
   });
 });
 
