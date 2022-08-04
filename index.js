@@ -18,6 +18,13 @@ app.get('/', (req, res)=>{
   });
 });
 
+app.use('*', (req, res) => {
+  return res.status(404).json({
+    success: false,
+    message: 'Resource not found !!! Something wrong...'
+  });
+});
+
 const portServer = process.env.PORT;
 app.listen(portServer, ()=>{
   console.log(`Server running on port: ${portServer}`);
