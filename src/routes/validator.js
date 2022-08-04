@@ -10,3 +10,8 @@ exports.createClientValidator = [
   })
 ];
 
+exports.validatorLogin = [
+  body('email').isEmail().withMessage('Format email invalid!!'),
+  body('password').isLength({min: 8})
+    .withMessage('Password must be 8 characters')
+];
