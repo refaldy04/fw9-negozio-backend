@@ -2,27 +2,25 @@ const db = require('../helpers/db');
 
 // console.log(db);
 
-exports.getAllCategory = (limit, cb) => {
+exports.getAllChat = (limit, cb) => {
   console.log(limit);
-  db.query(
-    `SELECT * FROM categories ORDER BY id ASC LIMIT ${limit}`,
-    (err, res) => {
-      // console.log(res.rows);
-      cb(res.rows);
-    }
-  );
+  db.query(`SELECT * FROM chats ORDER BY id ASC LIMIT ${limit}`, (err, res) => {
+    // console.log(res.rows);
+    cb(res.rows);
+  });
 };
 
-exports.getCategoryById = (id, cb) => {
-  db.query('SELECT * FROM categories WHERE id=$1', [id], (err, res) => {
+exports.getChatById = (id, cb) => {
+  console.log(id);
+  db.query(`SELECT * FROM chats WHERE id=${id}`, (err, res) => {
     cb(err, res);
   });
 };
 
-exports.createCategory = (data, picture, cb) => {
+exports.createChat = (data, cb) => {
   const query =
-    'INSERT INTO categories(name, gender, picture ) VALUES($1, $2, $3) RETURNING *';
-  const values = [data.name, data.gender, picture];
+    'INSERT INTO chats(sender_id, recipient_id, date, content ) VALUES($1, $2, $3, $4) RETURNING *';
+  const values = [data.sender_id, data.recipient_id, data.date, data.content];
   db.query(query, values, (err, res) => {
     if (err) {
       cb(err);
@@ -32,15 +30,16 @@ exports.createCategory = (data, picture, cb) => {
   });
 };
 
-exports.editCategory = (id, data, picture, cb) => {
+exports.editChat = (id, data, cb) => {
   let val;
   val = [id];
 
   const filtered = {};
   const obj = {
-    picture,
-    name: data.name,
-    gender: data.gender,
+    sender_id: data.sender_id,
+    recipient_id: data.recipient_id,
+    date: data.date,
+    content: data.content,
   };
 
   for (let x in obj) {
@@ -57,7 +56,7 @@ exports.editCategory = (id, data, picture, cb) => {
   console.log(finalResult);
   console.log(val);
 
-  const query = `UPDATE categories SET ${finalResult}  WHERE id=$1 RETURNING *`;
+  const query = `UPDATE chats SET ${finalResult}  WHERE id=$1 RETURNING *`;
   db.query(query, val, (err, res) => {
     if (res) {
       // console.log(res);
@@ -69,8 +68,8 @@ exports.editCategory = (id, data, picture, cb) => {
   });
 };
 
-exports.deleteCategory = (id, cb) => {
-  const query = 'DELETE FROM categories WHERE id=$1 RETURNING *';
+exports.deleteChat = (id, cb) => {
+  const query = 'DELETE FROM chats WHERE id=$1 RETURNING *';
   const value = [id];
   db.query(query, value, (err, res) => {
     // console.log(res);
