@@ -1,6 +1,8 @@
-const routeAdmin = require('express').Router();
+const routeAdmin = require("express").Router();
 
-//list route
-routeAdmin.use('/users', require('./users'));
+
+routeAdmin.use("/category", require("./category"));
+
+
 
 module.exports = routeAdmin;
