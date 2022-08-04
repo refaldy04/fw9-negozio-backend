@@ -1,9 +1,9 @@
-require("dotenv").config();
-const express = require("express");
+require('dotenv').config();
+const express = require('express');
 
 global.__basepath = __dirname;
 
-const cors = require("cors");
+const cors = require('cors');
 
 const app = express();
 
@@ -13,20 +13,20 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 
 //for route server
-app.use("/admin", require("./src/routes/serverAdmin"));
-app.use("/", require("./src/routes/serverClient"));
+app.use('/admin', require('./src/routes/serverAdmin'));
+app.use('/', require('./src/routes/serverClient'));
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   return res.json({
     success: true,
-    message: "Our server is running now",
+    message: 'Our server is running now',
   });
 });
 
-app.use("*", (req, res) => {
+app.use('*', (req, res) => {
   return res.status(404).json({
     success: false,
-    message: "Resource not found !!! Something wrong...",
+    message: 'Resource not found !!! Something wrong...',
   });
 });
 
