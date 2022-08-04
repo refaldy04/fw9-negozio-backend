@@ -33,7 +33,7 @@ exports.createCategory = (data, picture, cb) => {
 };
 
 exports.editCategory = (id, data, picture, cb) => {
-  val = [id];
+  let val = [id];
   const filtered = {};
   const obj = {
     picture,

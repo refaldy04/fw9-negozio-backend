@@ -1,7 +1,7 @@
-const routeAdmin = require("express").Router();
+const routeAdmin = require('express').Router();
 
 
-routeAdmin.use("/category", require("./category"));
+routeAdmin.use('/category', require('./category'));
 
 
 
