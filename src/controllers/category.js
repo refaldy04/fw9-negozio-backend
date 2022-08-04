@@ -1,17 +1,17 @@
-const categoryModels = require("../models/category");
-const response = require("../helpers/standardResponse");
-const upload = require("../helpers/upload").single("picture");
-const errorResponse = require("../helpers/errorResponse");
-const { validationResult } = require("express-validator");
+const categoryModels = require('../models/category');
+const response = require('../helpers/standardResponse');
+const upload = require('../helpers/upload').single('picture');
+const errorResponse = require('../helpers/errorResponse');
+const { validationResult } = require('express-validator');
 // console.log(categoryModels);
 
 exports.getAllCategory = (req, res) => {
-  console.log("a");
+  console.log('a');
   const { limit = 4 } = req.query;
   categoryModels.getAllCategory(limit, (result) => {
     return response(
       res,
-      "message from standard response: request success",
+      'message from standard response: request success',
       result
     );
   });
@@ -21,9 +21,9 @@ exports.getCategoryById = (req, res) => {
   const { id } = req.params;
   categoryModels.getCategoryById(id, (err, result) => {
     if (result.rows.length > 0) {
-      return response(res, "Detail transaction", result.rows[0]);
+      return response(res, 'Detail transaction', result.rows[0]);
     } else {
-      return res.redirect("/404");
+      return res.redirect('/404');
     }
   });
 };
@@ -44,13 +44,13 @@ exports.createCategory = (req, res) => {
 
     const validation = validationResult(req);
     if (!validation.isEmpty()) {
-      return response(res, "Error occured", validation.array(), 400);
+      return response(res, 'Error occured', validation.array(), 400);
     }
     categoryModels.createCategory(req.body, filename, (err, result) => {
       if (err) {
         return errorResponse(err, res);
       } else {
-        return response(res, "Profile created", result);
+        return response(res, 'Profile created', result);
       }
     });
   });
@@ -78,7 +78,7 @@ exports.editCategory = (req, res) => {
 
     const validation = validationResult(req);
     if (!validation.isEmpty()) {
-      return response(res, "Error occured", validation.array(), 400);
+      return response(res, 'Error occured', validation.array(), 400);
     }
 
     categoryModels.editCategory(id, req.body, filename, (err, result) => {
@@ -86,7 +86,7 @@ exports.editCategory = (req, res) => {
         console.log(err);
         return errorResponse(err, res);
       } else {
-        return response(res, "Edit profile successfully", result);
+        return response(res, 'Edit profile successfully', result);
       }
     });
   });
@@ -95,6 +95,6 @@ exports.editCategory = (req, res) => {
 exports.deleteCategory = (req, res) => {
   const { id } = req.params;
   categoryModels.deleteCategory(id, (result) => {
-    return response(res, "Profile deleted", result[0]);
+    return response(res, 'Profile deleted', result[0]);
   });
 };
