@@ -1,4 +1,4 @@
-const db = require("../helpers/db");
+const db = require('../helpers/db');
 
 // console.log(db);
 
@@ -14,14 +14,14 @@ exports.getAllCategory = (limit, cb) => {
 };
 
 exports.getCategoryById = (id, cb) => {
-  db.query("SELECT * FROM categories WHERE id=$1", [id], (err, res) => {
+  db.query('SELECT * FROM categories WHERE id=$1', [id], (err, res) => {
     cb(err, res);
   });
 };
 
 exports.createCategory = (data, picture, cb) => {
   const query =
-    "INSERT INTO categories(name, gender, picture ) VALUES($1, $2, $3) RETURNING *";
+    'INSERT INTO categories(name, gender, picture ) VALUES($1, $2, $3) RETURNING *';
   const values = [data.name, data.gender, picture];
   db.query(query, values, (err, res) => {
     if (err) {
@@ -32,8 +32,10 @@ exports.createCategory = (data, picture, cb) => {
   });
 };
 
-exports.editCategory = (id, data, picture, cb) => {
-  let val = [id];
+
+  let val;
+  val = [id];
+
   const filtered = {};
   const obj = {
     picture,
@@ -41,7 +43,7 @@ exports.editCategory = (id, data, picture, cb) => {
     gender: data.gender,
   };
 
-  for (x in obj) {
+  for (let x in obj) {
     if (obj[x] !== null) {
       if (obj[x] !== undefined) {
         filtered[x] = obj[x];
@@ -68,7 +70,7 @@ exports.editCategory = (id, data, picture, cb) => {
 };
 
 exports.deleteCategory = (id, cb) => {
-  const query = "DELETE FROM categories WHERE id=$1 RETURNING *";
+  const query = 'DELETE FROM categories WHERE id=$1 RETURNING *';
   const value = [id];
   db.query(query, value, (err, res) => {
     // console.log(res);

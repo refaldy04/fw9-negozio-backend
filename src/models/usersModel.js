@@ -1,9 +1,31 @@
 const db = require('../helpers/db');
 
 exports.getAllUserCustomers = (keyword,searchBy, sortBy, sortType, limit, offset, cb) => {
-  const q = `SELECT id, username, email, role FROM users
+  const q = `SELECT id, username, email, role FROM users WHERE 
   ${searchBy != null ? 
-    (`WHERE ${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : ''}`} LIKE '%${keyword}%'`) : ''} 
+    (`${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : ''}`} LIKE '%${keyword}%' AND`) : ''} role='customer' 
+    ORDER BY ${sortBy == null ? 'id DESC' : `${sortBy} ${sortType}`} LIMIT $1 OFFSET $2 `;
+  const val = [limit, offset];
+  db.query(q, val, (err, result)=>{
+    cb(err, result);
+  });
+};
+
+exports.getAllUserAdmins = (keyword,searchBy, sortBy, sortType, limit, offset, cb) => {
+  const q = `SELECT id, username, email, role FROM users WHERE 
+  ${searchBy != null ? 
+    (`${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : ''}`} LIKE '%${keyword}%' AND`) : ''} role='admin' 
+    ORDER BY ${sortBy == null ? 'id DESC' : `${sortBy} ${sortType}`} LIMIT $1 OFFSET $2 `;
+  const val = [limit, offset];
+  db.query(q, val, (err, result)=>{
+    cb(err, result);
+  });
+};
+
+exports.getAllUserSellers = (keyword,searchBy, sortBy, sortType, limit, offset, cb) => {
+  const q = `SELECT id, username, email, store_name, phone_number, role FROM users WHERE 
+  ${searchBy != null ? 
+    (`${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : `${searchBy==='store_name' ? 'store_name' : ''}`}`} LIKE '%${keyword}%' AND`) : ''} role='seller' 
     ORDER BY ${sortBy == null ? 'id DESC' : `${sortBy} ${sortType}`} LIMIT $1 OFFSET $2 `;
   const val = [limit, offset];
   db.query(q, val, (err, result)=>{
@@ -12,9 +34,25 @@ exports.getAllUserCustomers = (keyword,searchBy, sortBy, sortType, limit, offset
 };
 
 exports.countAllUserCustomers = (keyword, searchBy, cb) => {
-  const q = `SELECT id, username, email, role FROM users
+  const q = `SELECT id, username, email, role FROM users WHERE
   ${searchBy != null ? 
-    (`WHERE ${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : ''}`} LIKE '%${keyword}%'`) : ''} `;
+    (`${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : ''}`} LIKE '%${keyword}%' AND`) : ''} role='customer' `;
+  db.query(q, (err, result)=>{
+    cb(err, result.rowCount);
+  });
+};
+exports.countAllUserSellers = (keyword, searchBy, cb) => {
+  const q = `SELECT id, username, email, role FROM users WHERE
+  ${searchBy != null ? 
+    (`${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : ''}`} LIKE '%${keyword}%' AND`) : ''} role='seller' `;
+  db.query(q, (err, result)=>{
+    cb(err, result.rowCount);
+  });
+};
+exports.countAllUserAdmins = (keyword, searchBy, cb) => {
+  const q = `SELECT id, username, email, role FROM users WHERE
+  ${searchBy != null ? 
+    (`${searchBy==='username' ? 'username' : `${searchBy==='email'?'email' : ''}`} LIKE '%${keyword}%' AND`) : ''} role='admin' `;
   db.query(q, (err, result)=>{
     cb(err, result.rowCount);
   });
@@ -25,8 +63,8 @@ exports.createUserCustomer = (data, cb) => {
     'username': data.username,
     'email': data.email, 
     'password': data.password,
-    'store_name': data.store_name,
-    'phone_number': data.phone_number,
+    'store_name': data.store,
+    'phone_number': data.phone,
     'role': data.role
   };
 
@@ -45,7 +83,7 @@ exports.createUserCustomer = (data, cb) => {
   console.log(arg);
   console.log(val);
   console.log(argPosition);
-  const q = `INSERT INTO users (${arg}) VALUES (${argPosition}) RETURNING id, username, email, role`;
+  const q = `INSERT INTO users (${arg}) VALUES (${argPosition}) RETURNING *`;
   db.query(q, val, (err, result)=> {
     cb(err, result);
   });
