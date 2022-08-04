@@ -1,10 +1,12 @@
-const routeAdmin = require('express').Router();
+const routeAdmin = require("express").Router();
 
 //list route
-routeAdmin.use('/profiles', require('./profiles'));
+routeAdmin.use("/users", require("./users"));
 
-routeAdmin.use('/category', require('./category'));
+routeAdmin.use("/profiles", require("./profiles"));
 
-routeAdmin.use('/review', require('./review'));
+routeAdmin.use("/category", require("./category"));
+
+routeAdmin.use("/review", require("./review"));
 
 module.exports = routeAdmin;
