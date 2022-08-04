@@ -127,3 +127,67 @@ exports.deleteUser = (id, cb) => {
     cb(err, result);
   });
 };
+
+
+exports.userRegister = (data, cb) =>{
+  const fieldTable = {
+    'username': data.username,
+    'email': data.email, 
+    'password': data.password,
+    'store_name': data.store,
+    'phone_number': data.phone,
+    'role': data.role
+  };
+
+  let val = [];
+  let arg = [];
+  const argObj = Object.keys(fieldTable);
+  const valObj = Object.values(fieldTable);
+
+  for (let data in valObj){
+    if(valObj[data]!==undefined){
+      arg.push(argObj[data]);
+      val.push(valObj[data]);
+    }
+  }
+  const argPosition = arg.map((el, index)=> `$${index+1}`);
+  db.query('BEGIN', err => {
+    if(err) {
+      cb(err);
+    } else {
+      const q = `INSERT INTO users (${arg}) VALUES (${argPosition}) RETURNING *`;
+      db.query(q, val, (err, result)=> {
+        if(err){
+          cb(err);
+        } else {
+          const data = result.rows[0];
+          const idUser = data.id;
+          const insertProfile = 'INSERT INTO profiles(user_id) VALUES ($1)';
+          const valInsertProfile = [idUser];
+          db.query(insertProfile, valInsertProfile, (err, result2)=>{
+            if(err){
+              cb(err);
+            } else {
+              db.query('COMMIT', err => {
+                if(err){
+                  cb(err);
+                } else {
+                  cb(err, result);
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+};
+
+exports.getUserByEmail = (email, cb) => {
+  const q = `SELECT * FROM users WHERE email='${email}'`;
+  db.query(q, (err, result)=> {
+    cb(err, result);
+  });
+};
+
+exports.loginUser = () => {};
