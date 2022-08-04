@@ -1,9 +1,10 @@
-const db = require("../helpers/db");
+const db = require('../helpers/db');
 
 exports.getAllReview = (limit, cb) => {
   console.log(limit);
   db.query(
     `SELECT * FROM reviews ORDER BY id ASC LIMIT ${limit}`,
+
     (err, res) => {
       // console.log(res.rows);
       cb(res.rows);
@@ -12,14 +13,14 @@ exports.getAllReview = (limit, cb) => {
 };
 
 exports.getReviewById = (id, cb) => {
-  db.query("SELECT * FROM reviews WHERE id=$1", [id], (err, res) => {
+  db.query('SELECT * FROM reviews WHERE id=$1', [id], (err, res) => {
     cb(err, res);
   });
 };
 
 exports.createReview = (data, cb) => {
   const query =
-    "INSERT INTO reviews(rating, feedback, transaction_date ) VALUES($1, $2, $3) RETURNING *";
+    'INSERT INTO reviews(rating, feedback, transaction_date ) VALUES($1, $2, $3) RETURNING *';
   const values = [data.rating, data.feedback, data.transaction_date];
   db.query(query, values, (err, res) => {
     if (err) {
@@ -69,7 +70,7 @@ exports.editReview = (id, data, cb) => {
 };
 
 exports.deleteReview = (id, cb) => {
-  const query = "DELETE FROM reviews WHERE id=$1 RETURNING *";
+  const query = 'DELETE FROM reviews WHERE id=$1 RETURNING *';
   const value = [id];
   db.query(query, value, (err, res) => {
     // console.log(res);

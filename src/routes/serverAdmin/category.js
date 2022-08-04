@@ -2,7 +2,6 @@ const category = require('express').Router();
 const categoryController = require('../../controllers/category');
 
 const { body } = require('express-validator');
-=======
 
 // console.log(categoryController);
 // console.log(category);
