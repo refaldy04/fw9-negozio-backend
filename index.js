@@ -18,7 +18,13 @@ app.get("/", (req, res) => {
   });
 });
 
-console.log(process.env.PORT);
+
+app.use('*', (req, res) => {
+  return res.status(404).json({
+    success: false,
+    message: 'Resource not found !!! Something wrong...'
+  });
+});
 
 const portServer = process.env.PORT;
 app.listen(portServer, () => {
