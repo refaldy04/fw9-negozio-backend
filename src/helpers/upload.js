@@ -1,35 +1,31 @@
-const path = require('path');
-const multer = require('multer');
-const{LIMIT_PICTURE}= process.env;
+
+const path = require("path");
+const multer = require("multer");
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) =>{
-    cb(null, path.join(global.__basepath, 'assets', 'uploads'));
+  destination: (req, file, cb) => {
+    cb(null, path.join(global.__basepath, "assets", "uploads"));
   },
-  filename: (req, file, cb)=>{
-    const timestamp = new Date().getTime();
-    const ext = file.mimetype.split('/')[1];
-    if(!file){
-      cb(null, null);
-    }
-    cb(null, `${timestamp}.${ext}`);
-  }
+  filename: function (req, file, cb) {
+    // const ext = file.mimetype.split('/')[1];
+    const originalName = file.originalname;
+    // console.log(file);
+    cb(null, `${originalName}`);
+  },
 });
 
 const upload = multer({
   storage,
-  limits: {
-    fileSize: parseInt(LIMIT_PICTURE) * 1024 * 1024
-  },
-  fileFilter: (req, file, cb)=>{
-    const allowExt = ['image/png', 'image/jpg', 'image/webp'];
-    if(allowExt.includes(file.mimetype)){
+  limits: { fileSize: 1 * 1000 * 1000 },
+  fileFilter: (req, file, cb) => {
+    const allowExt = ["image/jpeg", "image/png", "image/webp"];
+    if (allowExt.includes(file.mimetype)) {
       cb(null, true);
-    }else{
-      const err = new Error('Extension not suported');
+    } else {
+      const err = new Error("Extension not supported");
       cb(err, false);
     }
-  }
+  },
 });
 
-module.exports = upload.single('picture');
+module.exports = upload;
