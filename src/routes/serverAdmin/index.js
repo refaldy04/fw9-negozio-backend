@@ -1,6 +1,7 @@
 const routeAdmin = require('express').Router();
 
 //list route
-routeAdmin.use('/users', require('./users'));
+routeAdmin.use('/profiles', require('./profiles'));
+
 
 module.exports = routeAdmin;
