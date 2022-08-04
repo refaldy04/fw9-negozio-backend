@@ -1,11 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 
-const cors = require("cors");
-
+const cors = require('cors');
 const app = express();
-
-global.__basepath = __dirname;
 
 app.use(cors());
 app.use(express.urlencoded({extended: false}));
@@ -14,7 +11,6 @@ app.use(express.urlencoded({extended: false}));
 app.use('/admin', require('./src/routes/serverAdmin'));
 app.use('/', require('./src/routes/serverClient'));
 
-
 app.get('/', (req, res)=>{
   return res.json({
     success: true,
@@ -22,12 +18,10 @@ app.get('/', (req, res)=>{
   });
 });
 
-
-app.use("*", (req, res) => {
+app.use('*', (req, res) => {
   return res.status(404).json({
     success: false,
-    message: "Resource not found !!! Something wrong...",
-
+    message: 'Resource not found !!! Something Wrong...'
   });
 });
 
