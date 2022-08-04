@@ -1,14 +1,26 @@
 const review = require("express").Router();
 const reviewController = require("../../controllers/review");
 
-review.get("/", reviewController.getAllReview);
-// review.get("/:id", reviewController.getreviewById);
-// review.post("/", reviewController.createreview);
-// review.patch(
-//   "/:id",
+// const { reviewValidator } = require("../../middleware/reviewValidator");
+const { body } = require("express-validator");
 
-//   reviewController.editreview
-// );
-// review.delete("/:id", reviewController.deletereview);
+const validation = require("../../middleware/validation");
+// const rules = require("../../middleware/profileValidator");
+
+const reviewValidator = [
+  body("rating").isInt({ min: 0, max: 5 }).withMessage("input vailed"),
+  body("time").isISO8601().withMessage("Date format invalid (ISO8601)"),
+];
+
+review.get("/", reviewController.getAllReview);
+review.get("/:id", reviewController.getReviewById);
+review.post("/", ...reviewValidator, validation, reviewController.createReview);
+review.patch(
+  "/:id",
+  ...reviewValidator,
+  validation,
+  reviewController.editReview
+);
+review.delete("/:id", reviewController.deleteReview);
 
 module.exports = review;
