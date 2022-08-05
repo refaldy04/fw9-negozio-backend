@@ -1,4 +1,5 @@
 const db = require('../helpers/db');
+const prisma = require('../helpers/prisma');
 
 exports.getAllUserCustomers = (keyword,searchBy, sortBy, sortType, limit, offset, cb) => {
   const q = `SELECT id, username, email, role FROM users WHERE 
@@ -190,4 +191,7 @@ exports.getUserByEmail = (email, cb) => {
   });
 };
 
-exports.loginUser = () => {};
+exports.getAll = async () => {
+  const users = await prisma.users.findMany();
+  return users;
+};
