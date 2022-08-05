@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model address_details {
+  id                      Int         @id @default(autoincrement())
+  created_at              DateTime?   @default(now()) @db.Timestamptz(6)
+  address_as              String?     @db.VarChar
+  recipient_name          String?     @db.VarChar
+  address_recipient_phone String?     @db.VarChar
+  address_street          String?
+  postal_code             Int?
+  address_city            String?     @db.VarChar
+  is_primary              Boolean?    @default(false)
+  addresses               addresses[]
+}
+
+model addresses {
+  id                 Int             @id @default(autoincrement())
+  created_at         DateTime?       @default(now()) @db.Timestamptz(6)
+  user_id            Int
+  address_details_id Int
+  address_details    address_details @relation(fields: [address_details_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users              users           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order              order[]
+}
+
+model categories {
+  id                 Int                  @id @default(autoincrement())
+  created_at         DateTime?            @default(now()) @db.Timestamptz(6)
+  category_name      String               @db.VarChar
+  category_picture   String?              @db.VarChar
+  product_categories product_categories[]
+}
+
+model options {
+  id                     Int               @id @default(autoincrement())
+  created_at             DateTime?         @default(now()) @db.Timestamptz(6)
+  option_name            String            @db.VarChar
+  option_color           Int               @default(1)
+  option_size            Int               @default(1)
+  option_condition       Boolean
+  option_product_picture String            @db.VarChar
+  product_options        product_options[]
+}
+
+model order {
+  id                Int             @id @default(autoincrement())
+  created_at        DateTime?       @default(now()) @db.Timestamptz(6)
+  address_id        Int
+  product_option_id Int
+  sum_amount        Decimal         @db.Decimal
+  payment_id        Int
+  addresses         addresses       @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payment           payment         @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_options   product_options @relation(fields: [product_option_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order_details     order_details[]
+}
+
+model order_details {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  order_id   Int
+  status     Int      @default(1)
+  order      order    @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model payment {
+  id           Int       @id @default(autoincrement())
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  payment_logo String    @db.VarChar
+  payment_name String    @db.VarChar
+  order        order[]
+}
+
+model product_categories {
+  id          Int        @id @default(autoincrement())
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  category_id Int
+  product_id  Int
+  categories  categories @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products    products   @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_options {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  option_id  Int
+  product_id Int
+  options    options   @relation(fields: [option_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products   products  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order      order[]
+}
+
+model products {
+  id                  Int                  @id @default(autoincrement())
+  created_at          DateTime?            @default(now()) @db.Timestamptz(6)
+  name                String               @db.VarChar
+  user_id             Int
+  unit_price          Decimal              @db.Decimal
+  product_picture     String               @db.VarChar
+  stock               Int
+  product_description String?
+  users               users                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_categories  product_categories[]
+  product_options     product_options[]
+  reviews             reviews[]
+}
+
+model reviews {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  product_id Int
+  rating     Int
+  products   products  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                Int         @id @default(autoincrement())
+  created_at        DateTime?   @default(now()) @db.Timestamptz(6)
+  full_name         String      @db.VarChar
+  email             String      @unique @db.VarChar
+  phone_number      String      @unique @db.VarChar
+  store_name        String?     @db.VarChar
+  password          String      @db.VarChar
+  role              Int
+  gender            Boolean?
+  date_of_birth     DateTime?   @db.Date
+  profile_picture   String?     @db.VarChar
+  store_description String?
+  addresses         addresses[]
+  products          products[]
+}
