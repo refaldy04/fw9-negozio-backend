@@ -18,4 +18,15 @@ const validationRules = require('../validator');
 
 users.get('/', userController.getAllUsers2);
 
+//create sellers
+users.post('/createSeller', validationRules.createNewSellerValidator, validationMiddleware, userController.createUser);
+users.patch('/updateSeller/:id', validationRules.createNewSellerValidator, validationMiddleware, userController.updateUser);
+//create customers
+users.post('/createCustomer', validationRules.createClientValidator, validationMiddleware, userController.createUser);
+users.patch('/updateCustomer/:id', validationRules.createClientValidator, validationMiddleware, userController.updateUser);
+//create admins
+users.post('/createAdmin', validationRules.createClientValidator, validationMiddleware, userController.createUser);
+
+users.delete('/:id', userController.deleteUser);
+
 module.exports = users;
