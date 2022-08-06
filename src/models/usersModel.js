@@ -215,3 +215,42 @@ exports.countGetAllUsers2 = async (searchBy, keyword) => {
   });
   return users;
 };
+
+exports.createUserModel = async (data) => {
+  if(data.role){
+    data.role = parseInt(data.role);
+  }
+  const user = await prisma.users.create({
+    data
+  });
+  return user;
+};
+
+exports.updateUserModel = async (id, data) => {
+  const idUser = parseInt(id, 10);
+  if(data.date_of_birth) {
+    data.date_of_birth = new Date(data.date_of_birth);
+    console.log(data.date_of_birth);
+  }
+  if(data.role){
+    data.role = parseInt(data.role);
+  }
+  if(data.gender==='male'){
+    data.gender = true;
+  } else {
+    data.gender = false;
+  }
+  const user = await prisma.users.update({
+    where:{id: idUser},
+    data
+  });
+  return user;
+};
+
+exports.deleteUserModel = async (id) => {
+  const idUser = parseInt(id, 10);
+  const user = await prisma.users.delete({
+    where: {id: idUser}
+  });
+  return user;
+};
