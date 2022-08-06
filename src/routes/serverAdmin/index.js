@@ -15,4 +15,6 @@ routeAdmin.use("/chat", require("./chat"));
 
 routeAdmin.use("/address-detail", require("./addressDetail"));
 
+routeAdmin.use('/chat-content', require('./chatContent'));
+
 module.exports = routeAdmin;
