@@ -2,14 +2,13 @@ require('dotenv').config();
 const express = require('express');
 
 global.__basepath = __dirname;
-
 const cors = require('cors');
 
 const app = express();
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
-
+app.use('/images' ,express.static('assets'));
 //for route server
 
 app.use('/admin', require('./src/routes/serverAdmin'));

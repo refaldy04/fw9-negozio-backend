@@ -31,6 +31,9 @@ const errorResponse = (err, res) => {
   if(err.code === 'P2002' && err.message.includes('Unique constraint') && err.message.includes('phone_number')){
     return response(res, 'Phone number has been taken with other users!!!', null, null, 400);
   }
+  if(err.code === 'P2002' && err.message.includes('Unique constraint') && err.message.includes('store_name')){
+    return response(res, 'Store name has been taken with other users!!!', null, null, 400);
+  }
   if(err.code === 'P2025' && err.message.includes(' Record to update not found')){
     return response(res, 'User not found!!! user id for update is not registered.', null, null, 400);
   }

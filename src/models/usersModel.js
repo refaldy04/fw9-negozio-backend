@@ -1,5 +1,6 @@
 const db = require('../helpers/db');
 const prisma = require('../helpers/prisma');
+const {PATH_ASSETS_IMAGE: imgUrl} = process.env;
 
 exports.getAllUserCustomers = (keyword,searchBy, sortBy, sortType, limit, offset, cb) => {
   const q = `SELECT id, username, email, role FROM users WHERE 
@@ -226,11 +227,14 @@ exports.createUserModel = async (data) => {
   return user;
 };
 
-exports.updateUserModel = async (id, data) => {
+exports.updateUserModel = async (id,picture, data) => {
   const idUser = parseInt(id, 10);
+  if(picture!=''){
+    data.profile_picture = `${imgUrl}/${picture}`;
+  }
+  // console.log(data);
   if(data.date_of_birth) {
     data.date_of_birth = new Date(data.date_of_birth);
-    console.log(data.date_of_birth);
   }
   if(data.role){
     data.role = parseInt(data.role);
@@ -251,6 +255,15 @@ exports.deleteUserModel = async (id) => {
   const idUser = parseInt(id, 10);
   const user = await prisma.users.delete({
     where: {id: idUser}
+  });
+  return user;
+};
+
+exports.getProfileByEmailUser = async (email) => {
+  const user = await prisma.users.findMany({
+    where: {
+      email: email
+    }
   });
   return user;
 };

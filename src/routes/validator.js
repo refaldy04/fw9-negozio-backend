@@ -13,8 +13,8 @@ exports.createClientValidator = [
 exports.createNewSellerValidator = [
   body('full_name').isLength({min: 6}).withMessage('Username must be 6 characters or more'),
   body('email').isEmail().withMessage('Format email is invalid'),
-  body('phone_number').isMobilePhone('id-ID').withMessage('Format phone is not support, Please use ID phone zone.'),
-  body('store_name').isLength({min: 6}).withMessage('Store name must be 6 characters'),
+  body('phone_number').isMobilePhone('id-ID').withMessage('Format phone is not support, Please use ID phone zone.').optional({nullable:true}),
+  body('store_name').isLength({min: 6}).withMessage('Store name must be 6 characters').optional({nullable:true}),
   body('password').isLength({min: 8}).withMessage('Password must be 8 character').customSanitizer(async (val) =>{
     const hash = await brcypt.hash(val, 10);
     return hash;
