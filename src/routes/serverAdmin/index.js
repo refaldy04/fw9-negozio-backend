@@ -13,4 +13,6 @@ routeAdmin.use('/review', require('./review'));
 
 routeAdmin.use('/chat', require('./chat'));
 
+routeAdmin.use('/chat-content', require('./chatContent'));
+
 module.exports = routeAdmin;
