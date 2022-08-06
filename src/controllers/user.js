@@ -23,7 +23,7 @@ exports.getAllUsers2 = async (req, res) => {
   user.map((el)=> {
     if(el.gender === false){
       el.gender = 'female';
-    } else {
+    } else if(el.gender === true) {
       el.gender = 'male';
     }
     if(el.role === 1){
@@ -54,7 +54,7 @@ exports.createUser = async (req, res) => {
       createUser.role = 'customer';
     } else if (createUser.role === 2) {
       createUser.role = 'seller';
-    } else {
+    } else if (createUser.role === 3) {
       createUser.role = 'admin';
     }
     return response(res, 'Success created new users', createUser);
@@ -83,7 +83,7 @@ exports.updateUser = async (req, res) => {
     }
     if(user.gender===true){
       user.gender = 'male';
-    } else {
+    } else if(user.gender===false){
       user.gender = 'female';
     }
     return response(res, 'Update user is successfully', user);
@@ -100,15 +100,68 @@ exports.deleteUser = async (req, res) => {
       user.role = 'customer';
     } else if (user.role === 2) {
       user.role = 'seller';
+    } else if (user.role === 3){
+      user.role = 'admin';
+    } 
+    if(user.gender===true){
+      user.gender = 'male';
+    } else if(user.gender===false) {
+      user.gender = 'female';
+    }
+    return response(res, 'Deleted user is successfully', user);
+  } catch (error) {
+    return errorResponse(error, res);
+  }
+};
+
+exports.getProfileCurrentUser = async (req, res) => {
+  const currentUser = req.authUser;
+  const idCurrentUser = currentUser.id;
+  try {
+    const currentUserProfile = await userModel.getUserByUserId(idCurrentUser);
+    if(currentUserProfile[0].role === 1){
+      currentUserProfile[0].role = 'customer';
+    } else if (currentUserProfile[0].role === 2) {
+      currentUserProfile[0].role = 'seller';
+    } else if (currentUserProfile[0].role === 3) {
+      currentUserProfile[0].role = 'admin';
+    }
+    if(currentUserProfile[0].gender===true){
+      currentUserProfile[0].gender = 'male';
+    } else if(currentUserProfile[0].gender === false) {
+      currentUserProfile[0].gender = 'female';
+    }
+    return response(res, 'This is current user datas.', currentUserProfile[0]);
+  } catch (error) {
+    return errorResponse(error, res);
+  }
+};
+
+exports.updateProfileCurrentUser = async (req, res) => {
+  const currentUser = req.authUser;
+  const idCurrentUser = currentUser.id;
+  let picture = '';
+  if(req.file){
+    picture = req.file.filename;  
+  }
+  
+  try {
+    const user = await userModel.updateUserModel(idCurrentUser, picture, req.body);
+    if(user.role === 1){
+      user.role = 'customer';
+    } else if (user.role === 2) {
+      user.role = 'seller';
     } else {
       user.role = 'admin';
     }
     if(user.gender===true){
       user.gender = 'male';
-    } else {
+    } else if(user.gender===false) {
       user.gender = 'female';
+    } else {
+      user.gender = null;
     }
-    return response(res, 'Deleted user is successfully', user);
+    return response(res, 'This is current user datas.', user);
   } catch (error) {
     return errorResponse(error, res);
   }
