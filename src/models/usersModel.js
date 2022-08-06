@@ -191,7 +191,27 @@ exports.getUserByEmail = (email, cb) => {
   });
 };
 
-exports.getAll = async () => {
-  const users = await prisma.users.findMany();
+exports.getAllUsers2 = async (offset, limit, searchBy, keyword, sortBy, sortType) => {
+  const keywordContains = {contains: `${keyword}`};
+  const users = await prisma.users.findMany({
+    skip: offset,
+    take: limit,
+    where: {
+      ...(searchBy === 'email' ? {email : keywordContains} : searchBy === 'phone_number' ? {phone_number : keywordContains}: searchBy === 'store_name' ? {store_name : keywordContains} : searchBy === 'full_name' ? { full_name : keywordContains}:{}),
+    },
+    orderBy: {
+      ...(sortBy === 'full_name' ? {full_name : `${sortType}`} :{}),
+    },
+  });
+  return users;
+};
+
+exports.countGetAllUsers2 = async (searchBy, keyword) => {
+  const keywordContains = {contains: `${keyword}`};
+  const users = await prisma.users.count({
+    where:{
+      ...(searchBy === 'email' ? {email : keywordContains} : searchBy === 'phone_number' ? {phone_number : keywordContains}: searchBy === 'store_name' ? {store_name : keywordContains} : searchBy === 'full_name' ? { full_name : keywordContains}:{}),      
+    },
+  });
   return users;
 };

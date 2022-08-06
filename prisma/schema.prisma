@@ -121,18 +121,39 @@ model reviews {
 }
 
 model users {
-  id                Int         @id @default(autoincrement())
-  created_at        DateTime?   @default(now()) @db.Timestamptz(6)
-  full_name         String      @db.VarChar
-  email             String      @unique @db.VarChar
-  phone_number      String      @unique @db.VarChar
-  store_name        String?     @db.VarChar
-  password          String      @db.VarChar
-  role              Int
-  gender            Boolean?
-  date_of_birth     DateTime?   @db.Date
-  profile_picture   String?     @db.VarChar
-  store_description String?
-  addresses         addresses[]
-  products          products[]
+  id                              Int         @id @default(autoincrement())
+  created_at                      DateTime?   @default(now()) @db.Timestamptz(6)
+  full_name                       String      @db.VarChar
+  email                           String      @unique @db.VarChar
+  phone_number                    String      @unique @db.VarChar
+  store_name                      String?     @db.VarChar
+  password                        String      @db.VarChar
+  role                            Int
+  gender                          Boolean?
+  date_of_birth                   DateTime?   @db.Date
+  profile_picture                 String?     @db.VarChar
+  store_description               String?
+  addresses                       addresses[]
+  chats_chats_recipient_idTousers chats[]     @relation("chats_recipient_idTousers")
+  chats_chats_sender_idTousers    chats[]     @relation("chats_sender_idTousers")
+  products                        products[]
+}
+
+model chat_content {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  content    String
+  is_deleted Boolean   @default(false)
+  chats      chats[]
+}
+
+model chats {
+  id                              Int          @id(map: "chat_details_pkey") @default(autoincrement())
+  created_at                      DateTime?    @default(now()) @db.Timestamptz(6)
+  recipient_id                    Int
+  sender_id                       Int
+  chat_content_id                 Int
+  chat_content                    chat_content @relation(fields: [chat_content_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_chats_recipient_idTousers users        @relation("chats_recipient_idTousers", fields: [recipient_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_chats_sender_idTousers    users        @relation("chats_sender_idTousers", fields: [sender_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
