@@ -68,8 +68,12 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   const {id} = req.params;
+  let picture = '';
+  if(req.file){
+    picture = req.file.filename;  
+  }
   try {
-    const user = await userModel.updateUserModel(id, req.body);
+    const user = await userModel.updateUserModel(id, picture, req.body);
     if(user.role === 1){
       user.role = 'customer';
     } else if (user.role === 2) {

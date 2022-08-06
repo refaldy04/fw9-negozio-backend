@@ -4,7 +4,7 @@ const userController = require('../../controllers/user');
 
 const validationMiddleware = require('../../middleware/validation');
 const validationRules = require('../validator');
-
+const uploadFile = require('../../middleware/uploadFile');
 //customer
 // users.get('/', userController.getAllUserCustomers);
 // users.post('/', validationRules.createClientValidator, validationMiddleware, userController.createUserCustomer);
@@ -23,7 +23,7 @@ users.post('/createSeller', validationRules.createNewSellerValidator, validation
 users.patch('/updateSeller/:id', validationRules.createNewSellerValidator, validationMiddleware, userController.updateUser);
 //create customers
 users.post('/createCustomer', validationRules.createClientValidator, validationMiddleware, userController.createUser);
-users.patch('/updateCustomer/:id', validationRules.createClientValidator, validationMiddleware, userController.updateUser);
+users.patch('/updateCustomer/:id', uploadFile, validationRules.createClientValidator, validationMiddleware, userController.updateUser);
 //create admins
 users.post('/createAdmin', validationRules.createClientValidator, validationMiddleware, userController.createUser);
 
