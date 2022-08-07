@@ -1,5 +1,6 @@
 const response = require('../helpers/standardResponse');
 const productModel = require('../models/productModel');
+const reviewModel = require('../models/review');
 
 exports.createProduct = async (req, res) => {
   const currentUser = req.authUser;
@@ -12,7 +13,7 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getAllProductsUser = async (req, res) => {
-  const {search='',searchBy, sortBy, sortType, limit=parseInt(process.env.LIMIT_DATA), page=1} = req.query;
+  const {search='', sortBy, sortType, limit=parseInt(process.env.LIMIT_DATA), page=1} = req.query;
   const type = parseInt(sortType);
   const offset = (page-1) * limit;
   let typeSort='';
@@ -61,4 +62,11 @@ exports.updateProductOption = async (req, res) => {
   }
   const productOption = await productModel.updateProductOption(parseInt(idOption, 10), picture, req.body);
   return response(res, 'Success update product option.', productOption);
+};
+
+//review
+exports.createReviewProduct = async (req, res) => {
+  const {idProduct} = req.params;
+  const review = await reviewModel.createReviewProduct(idProduct, req.body);
+  return response(res, 'Success update product option.', review);
 };

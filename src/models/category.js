@@ -1,4 +1,6 @@
 const db = require('../helpers/db');
+const prisma = require('../helpers/prisma');
+const {PATH_ASSETS_IMAGE: imgUrl} = process.env;
 
 // console.log(db);
 
@@ -76,4 +78,16 @@ exports.deleteCategory = (id, cb) => {
     // console.log(res);
     cb(res.rows);
   });
+};
+
+
+//with prisma
+exports.createCategoryProduct = async (picture, data) => {
+  const category = await prisma.categories.create({
+    data: {
+      category_name: data.category_name,
+      category_picture: `${imgUrl}/${picture}`
+    }
+  });
+  return category;
 };

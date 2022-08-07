@@ -98,3 +98,15 @@ exports.deleteCategory = (req, res) => {
     return response(res, 'Profile deleted', result[0]);
   });
 };
+
+
+//with prisma
+
+exports.createCategoryProduct = async (req, res) => {
+  let picture = '';
+  if(req.file){
+    picture = req.file.filename;  
+  }
+  const category = await categoryModels.createCategoryProduct(picture, req.body);
+  return response(res, 'create catagory successfully', category);
+}
