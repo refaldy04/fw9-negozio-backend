@@ -2,42 +2,56 @@ const errorResponse = require('../helpers/errorResponse');
 const response = require('../helpers/standardResponse');
 const chatContentModel = require('../models/chatContent');
 
-exports.getAllChat = async (req, res) => {
-  
-  const {search='content',searchBy, sortBy, sortType, limit=parseInt(process.env.LIMIT_DATA), page=1} = req.query;
-  const type = parseInt(sortType);
-  const offset = (page-1) * limit;
-  let typeSort='';
-  if(type == 0){
-    typeSort = 'asc';
-  } else {
-    typeSort = 'desc';
-  }
-  if(!type){
-    typeSort = 'asc';
-  }
+// exports.getAllChat = async (req, res) => {
+//   const sender_id = req.authUser.id;
+//   const {search='content',searchBy, sortBy, sortType, limit=parseInt(process.env.LIMIT_DATA), page=1} = req.query;
+//   const type = parseInt(sortType);
+//   const offset = (page-1) * limit;
+//   let typeSort='';
+//   if(type == 0){
+//     typeSort = 'asc';
+//   } else {
+//     typeSort = 'desc';
+//   }
+//   if(!type){
+//     typeSort = 'asc';
+//   }
 
-  const pageInfo = {};
+//   const pageInfo = {};
 
-  const chat = await chatContentModel.getAllChat(offset, parseInt(limit), searchBy, search, sortBy, typeSort);
-  if(chat?.length < 1) {
-    return response(res, 'Users not found!!!', null, null, 404);
-  } else {
-    const countChat = await chatContentModel.countGetAllChat(searchBy, search);
-    pageInfo.totalDatas = countChat;
-    pageInfo.pages = Math.ceil(countChat/limit);
-    pageInfo.currentPage = parseInt(page);
-    pageInfo.prevPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
-    pageInfo.nextPage = pageInfo.currentPage < pageInfo.pages ? pageInfo.currentPage + 1 : null;
+//   const chat = await chatContentModel.getAllChat(sender_id,offset, parseInt(limit), searchBy, search, sortBy, typeSort);
+//   if(chat?.length < 1) {
+//     return response(res, 'Users not found!!!', null, null, 404);
+//   } else {
+//     const countChat = await chatContentModel.countGetAllChat(sender_id, searchBy, search);
+//     pageInfo.totalDatas = countChat;
+//     pageInfo.pages = Math.ceil(countChat/limit);
+//     pageInfo.currentPage = parseInt(page);
+//     pageInfo.prevPage = pageInfo.currentPage > 1 ? pageInfo.currentPage - 1 : null;
+//     pageInfo.nextPage = pageInfo.currentPage < pageInfo.pages ? pageInfo.currentPage + 1 : null;
 
-    return response(res, 'Success selected chat', chat, pageInfo);
-  }
+//     return response(res, 'Success selected chat', chat, pageInfo);
+//   }
+// };
+
+exports.getAllChat = (req, res)=>{
+  const {id}=req.authUser;
+  //console.log('tes'+id)
+  chatContentModel.getAllChat(id, req.query.id, (results)=>{
+    console.log(results);
+    if(results.rows.length > 0){
+      return response(res, 'All chat with someone', results.rows);
+    }
+    else{return res.redirect('/404');
+    }
+  });
 };
 
 //create chat
 exports.createChatContent = async (req, res) => {
+  const sender_id = req.authUser.id;
   try {
-    const createChatContent = await chatContentModel.createChatContentModel(req.body);
+    const createChatContent = await chatContentModel.createChatContentModel(sender_id, req.body);
     return response(res, 'Success created new chat', createChatContent);
   } catch (error) {
     return errorResponse(error, res);
