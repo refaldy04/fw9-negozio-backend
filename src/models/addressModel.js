@@ -114,7 +114,6 @@ exports.getAllAddressUser = async (idUser) => {
 };
 
 exports.updateAddressUser = async (idAddress, data) => {
-  console.log(data);
   if (data.is_primary === 'false') {
     data.is_primary = false;
   } else {

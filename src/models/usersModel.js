@@ -166,7 +166,7 @@ exports.userRegister = (data, cb) =>{
           const idUser = data.id;
           const insertProfile = 'INSERT INTO profiles(user_id) VALUES ($1)';
           const valInsertProfile = [idUser];
-          db.query(insertProfile, valInsertProfile, (err, result2)=>{
+          db.query(insertProfile, valInsertProfile, (err)=>{
             if(err){
               cb(err);
             } else {
