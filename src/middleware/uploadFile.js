@@ -1,4 +1,4 @@
-const upload = require('../helpers/upload').single('picture');
+const upload = require('../helpers/upload').single('payment_logo');
 const response = require('../helpers/standartResponse');
 
 const uploadFile = (req, res, next)=>{
