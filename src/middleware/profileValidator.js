@@ -18,3 +18,8 @@ exports.addressValidator = [
 exports.chatContentValidator =[
   body('content').isLength({min:1}).withMessage('Can\'t send message').optional({nullable:true}),
 ];
+
+//payment method
+exports.paymentMethodValidator =[
+  body('payment_method').isLength({min:4}).withMessage('minmal name 4 character').optional({nullable:true}),
+];
