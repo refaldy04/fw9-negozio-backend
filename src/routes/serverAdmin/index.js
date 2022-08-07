@@ -15,7 +15,9 @@ routeAdmin.use('/chat', require('./chat'));
 
 routeAdmin.use('/address-detail', require('./addressDetail'));
 
-routeAdmin.use('/chat-content', require('./chatContent'));
+routeAdmin.use("/chat-content", require("./chatContent"));
+
+routeAdmin.use("/product-review", require("./product-review"));
 
 routeAdmin.use('/payment-method', require('./paymentMethod'));
 
