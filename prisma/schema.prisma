@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -29,6 +26,7 @@ model addresses {
   user_id            Int
   address_details_id Int
   address_details    address_details @relation(fields: [address_details_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users              users           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   order              order[]
 }
 
@@ -41,15 +39,15 @@ model categories {
 }
 
 model chat_content {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now()) @db.Timestamptz(6)
+  id         Int       @id @default(autoincrement())
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
   content    String
-  is_deleted Boolean  @default(false)
+  is_deleted Boolean   @default(false)
   chats      chats[]
 }
 
 model chats {
-  id                              Int          @id @default(autoincrement())
+  id                              Int          @id(map: "chat_details_pkey") @default(autoincrement())
   created_at                      DateTime?    @default(now()) @db.Timestamptz(6)
   recipient_id                    Int
   sender_id                       Int
@@ -62,11 +60,13 @@ model chats {
 model options {
   id                     Int               @id @default(autoincrement())
   created_at             DateTime?         @default(now()) @db.Timestamptz(6)
-  option_name            String            @db.VarChar
-  option_color           Int               @default(1)
-  option_size            Int               @default(1)
-  option_conditio        Boolean
-  option_product_picture String            @db.VarChar
+  option_name            String?           @db.VarChar
+  option_color           Int?              @default(1)
+  option_size            Int?              @default(1)
+  option_condition       Boolean
+  option_product_picture String?           @db.VarChar
+  product_id             Int?
+  products               products?         @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   product_options        product_options[]
 }
 
@@ -128,6 +128,7 @@ model products {
   stock               Int
   product_description String?
   users               users                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  options             options[]
   product_categories  product_categories[]
   product_options     product_options[]
   reviews             reviews[]
@@ -142,22 +143,20 @@ model reviews {
 }
 
 model users {
-
   id                              Int         @id @default(autoincrement())
   created_at                      DateTime?   @default(now()) @db.Timestamptz(6)
   full_name                       String      @db.VarChar
   email                           String      @unique @db.VarChar
   phone_number                    String?     @unique @db.VarChar
-  store_name                      String?     @db.VarChar
+  store_name                      String?     @unique @db.VarChar
   password                        String      @db.VarChar
-
   role                            Int
   gender                          Boolean?
-  date_of_birth                   DateTime?  @db.Date
-  profile_picture                 String?    @db.VarChar
+  date_of_birth                   DateTime?   @db.Date
+  profile_picture                 String?     @db.VarChar
   store_description               String?
-  chats_chats_recipient_idTousers chats[]    @relation("chats_recipient_idTousers")
-  chats_chats_sender_idTousers    chats[]    @relation("chats_sender_idTousers")
+  addresses                       addresses[]
+  chats_chats_recipient_idTousers chats[]     @relation("chats_recipient_idTousers")
+  chats_chats_sender_idTousers    chats[]     @relation("chats_sender_idTousers")
   products                        products[]
 }
-
