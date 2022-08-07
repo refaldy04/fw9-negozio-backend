@@ -1,4 +1,5 @@
 const db = require('../helpers/db');
+const prisma = require('../helpers/prisma');
 const {LIMIT_DATA}=process.env;
 
 //get all
@@ -76,4 +77,55 @@ exports.deleteAddress=(id,  cb)=>{
   db.query(q, val, (err, res)=>{
     cb(res.rows);
   });
+};
+
+/// with prisma
+exports.createAddressUser = async (id, dataReq)=>{
+  if (dataReq.is_primary === 'false') {
+    dataReq.is_primary = false;
+  } else {
+    dataReq.is_primary = true;
+  }
+  dataReq.postal_code = parseInt(dataReq.postal_code);
+  // return addressData;
+  const tranAddress = await prisma.address_details.create({
+    data: {
+      ...dataReq,
+      addresses: {
+        create: [
+          {user_id: id},
+        ]
+      }
+    }
+  });
+  return tranAddress;
+};
+
+exports.getAllAddressUser = async (idUser) => {
+  const getAddress = await prisma.addresses.findMany({
+    where: {
+      user_id: idUser
+    },
+    select: {
+      address_details:{}
+    }
+  });
+  return getAddress;
+};
+
+exports.updateAddressUser = async (idAddress, data) => {
+  console.log(data);
+  if (data.is_primary === 'false') {
+    data.is_primary = false;
+  } else {
+    data.is_primary = true;
+  }
+  data.postal_code = parseInt(data.postal_code);
+  const address = await prisma.address_details.update({
+    where:{
+      id: idAddress
+    },
+    data
+  });
+  return address;
 };

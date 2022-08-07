@@ -62,3 +62,41 @@ exports.deleteProfiles = (req, res)=>{
     return response(res, 'Delete address successfully', results[0]);
   });
 };
+
+
+// with prisma
+
+exports.createAddressUser = async (req, res) => {
+  const currentUser = req.authUser;
+  const address = await addressModel.createAddressUser(currentUser.id, req.body);
+  return response(res, 'Success add new address.', address);
+};
+
+exports.getAllAddressUser = async (req, res) => {
+  const currentUser = req.authUser;
+  // const {idAddress} = req.params;
+  const address = await addressModel.getAllAddressUser(currentUser.id);
+  if(address.length<1){
+    return response(res, 'You dont have address saved.', null, null, 400);
+  } else {
+    return response(res, 'Success get data.', address);
+  }
+};
+
+exports.updateAddressUser = async (req, res) => {
+  const currentUser = req.authUser;
+  const {idAddress} = req.params;
+  const getAddress = await addressModel.getAllAddressUser(currentUser.id);
+  if(getAddress.length>=1){
+    // getAddress.map((el)=>{
+    //   if((el.address_details.is_primary===true)>=1) {
+        
+    //     // return response(res, 'You just can set 1 address as your primary address.');
+    //   }
+    // });
+    const address = await addressModel.updateAddressUser(parseInt(idAddress, 10), req.body);
+    return response(res, 'Success updated your address.', address);
+  } else {
+    return response(res, 'Your data is empty.', null, null, 400);
+  }
+};

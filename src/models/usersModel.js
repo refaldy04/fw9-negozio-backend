@@ -229,6 +229,7 @@ exports.createUserModel = async (data) => {
 
 exports.updateUserModel = async (id,picture, data) => {
   const idUser = parseInt(id, 10);
+  
   if(picture!=''){
     data.profile_picture = `${imgUrl}/${picture}`;
   }
@@ -241,7 +242,7 @@ exports.updateUserModel = async (id,picture, data) => {
   }
   if(data.gender==='male'){
     data.gender = true;
-  } else {
+  } else if (data.gender==='female') {
     data.gender = false;
   }
   const user = await prisma.users.update({
@@ -263,6 +264,15 @@ exports.getProfileByEmailUser = async (email) => {
   const user = await prisma.users.findMany({
     where: {
       email: email
+    }
+  });
+  return user;
+};
+
+exports.getUserByUserId = async (id) => {
+  const user = await prisma.users.findMany({
+    where: {
+      id: id
     }
   });
   return user;
