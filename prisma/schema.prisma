@@ -36,6 +36,7 @@ model categories {
   category_name      String               @db.VarChar
   category_picture   String?              @db.VarChar
   product_categories product_categories[]
+  products           products[]
 }
 
 model chat_content {
@@ -127,6 +128,8 @@ model products {
   product_picture     String               @db.VarChar
   stock               Int
   product_description String?
+  category_id         Int?
+  categories          categories?          @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users               users                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   options             options[]
   product_categories  product_categories[]

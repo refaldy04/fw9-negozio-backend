@@ -100,7 +100,9 @@ exports.getProductsUser = async (offset, limit, sortBy, sortType, keyword, idUse
       ...(sortBy === 'name' ? {name : `${sortType}`} : sortBy === 'price' ? {unit_price : `${sortType}`} : sortBy==='stock' ? {stock : `${sortType}`}: {}),
     },
     include: {
-      options: true
+      options: true,
+      reviews: true,
+      categories: true
     }
   });
   return getProduct;

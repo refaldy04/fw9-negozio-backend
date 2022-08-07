@@ -1,3 +1,4 @@
+const prisma = require('../helpers/prisma');
 const db = require('../helpers/db');
 
 exports.getAllReview = (limit, cb) => {
@@ -41,7 +42,7 @@ exports.editReview = (id, data, cb) => {
     transaction_date: data.transaction_date,
   };
 
-  for (x in obj) {
+  for (let x in obj) {
     if (obj[x] !== null) {
       if (obj[x] !== undefined) {
         filtered[x] = obj[x];
@@ -76,4 +77,16 @@ exports.deleteReview = (id, cb) => {
     // console.log(res);
     cb(res.rows);
   });
+};
+
+
+//with prismma
+exports.createReviewProduct = async (idProduct, dataReq) => {
+  const review = await prisma.reviews.create({
+    data: {
+      product_id: parseInt(idProduct),
+      rating: parseInt(dataReq.ratingScore)
+    }
+  });
+  return review;
 };
