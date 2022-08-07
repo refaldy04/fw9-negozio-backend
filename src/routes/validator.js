@@ -27,3 +27,9 @@ exports.validatorLogin = [
   body('password').isLength({min: 8})
     .withMessage('Password must be 8 characters')
 ];
+
+exports.validationProductForm = [
+  body('name').isLength({min: 6}).withMessage('Name must 6 characters'),
+  body('unit_price').isNumeric().withMessage('Field must number'),
+  body('stock').isNumeric().withMessage('Field must number')
+];

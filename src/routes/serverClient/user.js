@@ -2,7 +2,7 @@ const userRoute = require('express').Router();
 const userController = require('../../controllers/user');
 const addressController = require('../../controllers/address');
 const authMiddleware = require('../../middleware/auth');
-const uploadFile = require('../../middleware/uploadFile');
+const uploadFile = require('../../middleware/uploudMiddelware');
 //list route
 userRoute.get('/', authMiddleware, userController.getProfileCurrentUser);
 userRoute.patch('/', authMiddleware, uploadFile, userController.updateProfileCurrentUser);
