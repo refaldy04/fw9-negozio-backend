@@ -29,8 +29,13 @@ exports.createProductWithOption = async (idUser, dataReq) => {
 };
 
 exports.createProductWithOption2 = async (idUser, picture, dataReq) => {
-  const picture_product = picture.product_picture[0].filename;
-  const option_picture = picture.option_product_picture.map(e=>e.filename);
+  let picture_product;
+  let option_picture;
+  
+  if(picture.length<1){
+    picture_product = picture?.product_picture[0].filename;
+    option_picture = picture?.option_product_picture.map(e=>e.filename);
+  }
   
   const product = await prisma.products.create({
     data: {
@@ -46,28 +51,28 @@ exports.createProductWithOption2 = async (idUser, picture, dataReq) => {
             option_condition: (dataReq.option_condition[0]==='new' ? true : false),
             option_size: parseInt(dataReq.option_size[0]),
             option_color:parseInt(dataReq.option_color[0]),
-            option_product_picture: `${imgUrl}/${option_picture[0]}`
+            option_product_picture: `${imgUrl}/${option_picture !==undefined ? option_picture[0] : ''}`
           },
           {
             option_name: dataReq.option_name[1],
             option_condition: (dataReq.option_condition[1]==='new' ? true : false),
             option_size: parseInt(dataReq.option_size[1]),
             option_color:parseInt(dataReq.option_color[1]),
-            option_product_picture: `${imgUrl}/${option_picture[1]}`
+            option_product_picture: `${imgUrl}/${option_picture !==undefined ? option_picture[1] : ''}`
           }, 
           {
             option_name: dataReq.option_name[2],
             option_condition: (dataReq.option_condition[2]==='new' ? true : false),
             option_size: parseInt(dataReq.option_size[2]),
             option_color:parseInt(dataReq.option_color[2]),
-            option_product_picture: `${imgUrl}/${option_picture[2]}`
+            option_product_picture: `${imgUrl}/${option_picture !==undefined ? option_picture[2] : ''}`
           },
           {
             option_name: dataReq.option_name[3],
             option_condition: (dataReq.option_condition[3]==='new' ? true : false),
             option_size: parseInt(dataReq.option_size[3]),
             option_color:parseInt(dataReq.option_color[3]),
-            option_product_picture: `${imgUrl}/${option_picture[3]}`
+            option_product_picture: `${imgUrl}/${option_picture !==undefined ? option_picture[3] : ''}`
           }
         ]
       },

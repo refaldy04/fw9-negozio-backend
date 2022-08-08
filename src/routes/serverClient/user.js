@@ -10,5 +10,6 @@ userRoute.patch('/', authMiddleware, uploadFile, userController.updateProfileCur
 userRoute.post('/address', authMiddleware, addressController.createAddressUser);
 userRoute.get('/address', authMiddleware, addressController.getAllAddressUser);
 userRoute.patch('/address/:idAddress', authMiddleware, addressController.updateAddressUser);
+userRoute.get('/address/:idAddress', authMiddleware, addressController.getAddressById);
 
 module.exports = userRoute;
