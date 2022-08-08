@@ -3,7 +3,6 @@
 // console.log(uuidv4());
 
 const prisma = require('../helpers/prisma');
-const { v4: uuidv4 } = require('uuid');
 
 // const uuid= uuidv4();
 
@@ -19,7 +18,7 @@ const { v4: uuidv4 } = require('uuid');
 
 //create order
 exports.createOrderModel = async (data) => {
-  const code= uuidv4();
+  
   data.amount = parseInt(data.amount);
   data.address_id= parseInt(data.address_id);
   data.product_option_id= parseInt(data.product_option_id);
