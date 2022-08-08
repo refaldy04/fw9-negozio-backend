@@ -167,3 +167,4 @@ model payment {
   is_payment   Boolean?       @default(false)
   order_header order_header[]
 }
+

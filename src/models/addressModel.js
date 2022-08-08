@@ -81,6 +81,7 @@ exports.deleteAddress=(id,  cb)=>{
 
 /// with prisma
 exports.createAddressUser = async (id, dataReq)=>{
+  console.log(id);
   if (dataReq.is_primary === 'false') {
     dataReq.is_primary = false;
   } else {
