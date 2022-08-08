@@ -1,4 +1,4 @@
-const prisma = require("../helpers/prisma");
+const prisma = require('../helpers/prisma');
 
 exports.getAllProductReview = async () => {
   const productReview = await prisma.reviews.findMany();

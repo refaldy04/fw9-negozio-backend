@@ -109,4 +109,4 @@ exports.createCategoryProduct = async (req, res) => {
   }
   const category = await categoryModels.createCategoryProduct(picture, req.body);
   return response(res, 'create catagory successfully', category);
-}
+};
