@@ -83,6 +83,13 @@ exports.getAllAddressUser = async (req, res) => {
   }
 };
 
+exports.getAddressById = async (req, res) => {
+  const currentUser = req.authUser;
+  const {idAddress} = req.params;
+  const address = await addressModel.getAddressById(parseInt(idAddress), currentUser.id);
+  return response(res, 'Success get data.', address);
+};
+
 exports.updateAddressUser = async (req, res) => {
   const currentUser = req.authUser;
   const {idAddress} = req.params;
