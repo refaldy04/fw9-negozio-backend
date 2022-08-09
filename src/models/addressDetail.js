@@ -1,10 +1,10 @@
-const prisma = require('../helpers/prisma');
+const prisma = require("../helpers/prisma");
 
 // console.log(db);
 
 exports.getAllAddressDetail = async () => {
   const addressDetail = await prisma.address_details.findMany();
-  console.log(addressDetail);
+  // console.log(addressDetail);
   return addressDetail;
 };
 
@@ -20,7 +20,7 @@ exports.getAddressDetail = async (id) => {
 
 exports.createAddressDetail = async (data) => {
   console.log(data);
-  if (data.is_primary === 'false') {
+  if (data.is_primary === "false") {
     data.is_primary = false;
   } else {
     data.is_primary = true;
@@ -36,7 +36,7 @@ exports.createAddressDetail = async (data) => {
 
 exports.updateAddressDetail = async (id, data) => {
   id = parseInt(id, 10);
-  if (data.is_primary === 'false') {
+  if (data.is_primary === "false") {
     data.is_primary = false;
   } else {
     data.is_primary = true;
