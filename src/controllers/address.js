@@ -4,8 +4,8 @@ const { LIMIT_DATA } = process.env;
 
 exports.getAllAddress = (req, res) => {
   const {
-    seacrh_by = "year",
-    search = "2022",
+    search_by = "user_id",
+    keyword = "1",
     sortBy = "id",
     sorting = "ASC",
     limit = parseInt(LIMIT_DATA),
@@ -13,10 +13,19 @@ exports.getAllAddress = (req, res) => {
   } = req.query;
 
   const offset = (page - 1) * limit;
+  if (search_by !== "user_id" && "address_details_id") {
+    return response(
+      res,
+      `input search_by failed, please input between user_id or address_details_id`,
+      null,
+      null,
+      400
+    );
+  }
 
   addressModel.getAllAddress(
-    seacrh_by,
-    search,
+    search_by,
+    keyword,
     sortBy,
     sorting,
     limit,
@@ -24,11 +33,13 @@ exports.getAllAddress = (req, res) => {
     (err, results) => {
       // console.log(err);
       // console.log(res);
+
       if (results.length < 1) {
-        return res.redirect("/404");
+        return response(res, `input failed`, null, null, 400);
       }
+
       const pageInfo = {};
-      addressModel.countAllAddress(seacrh_by, search, (err, totalData) => {
+      addressModel.countAllAddress(search_by, keyword, (err, totalData) => {
         pageInfo.totalData = totalData;
         pageInfo.totalpage = Math.ceil(totalData / limit);
         pageInfo.currentpage = parseInt(page);
@@ -38,7 +49,7 @@ exports.getAllAddress = (req, res) => {
             : null;
         pageInfo.prevpage =
           pageInfo.currentpage > 1 ? pageInfo.currentpage - 1 : null;
-        console.log("coba");
+        // console.log("coba");
         return response(res, "list all address", results, pageInfo);
       });
     }
@@ -104,9 +115,12 @@ exports.getAllAddressUser = async (req, res) => {
 
 exports.getAddressById = async (req, res) => {
   const currentUser = req.authUser;
-  const {idAddress} = req.params;
-  const address = await addressModel.getAddressById(parseInt(idAddress), currentUser.id);
-  return response(res, 'Success get data.', address);
+  const { idAddress } = req.params;
+  const address = await addressModel.getAddressById(
+    parseInt(idAddress),
+    currentUser.id
+  );
+  return response(res, "Success get data.", address);
 };
 
 exports.updateAddressUser = async (req, res) => {

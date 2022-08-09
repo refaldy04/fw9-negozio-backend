@@ -13,10 +13,10 @@ exports.getAllAddress = (
   cb
 ) => {
   db.query(
-    `SELECT * FROM addresses WHERE date_part('${search_by}', created_at) = ${keyword} ORDER BY ${sortBy} ${sorting} LIMIT $1 OFFSET $2`,
+    `SELECT * FROM addresses WHERE ${search_by} = ${keyword} ORDER BY ${sortBy} ${sorting} LIMIT $1 OFFSET $2`,
     [limit, offset],
     (err, res) => {
-      console.log(res);
+      console.log(res.rows);
       cb(err, res.rows);
     }
   );
