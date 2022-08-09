@@ -43,39 +43,3 @@ exports.deleteAddressDetail = async (req, res) => {
   return response(res, 'Delete Address Detail success', addressDetail);
 };
 
-//   const validation = validationResult(req);
-//   if (!validation.isEmpty()) {
-//     return response(res, "Error occured", validation.array(), 400);
-//   }
-// chatModels.createChat(req.body, (err, result) => {
-//   if (err) {
-//     return errorResponse(err, res);
-//   } else {
-//     return response(res, "Chat created", result);
-//   }
-// });
-
-exports.editChat = (req, res) => {
-  const { id } = req.params;
-
-  //   const validation = validationResult(req);
-  //   if (!validation.isEmpty()) {
-  //     return response(res, "Error occured", validation.array(), 400);
-  //   }
-
-  chatModels.editChat(id, req.body, (err, result) => {
-    if (err) {
-      console.log(err);
-      return errorResponse(err, res);
-    } else {
-      return response(res, 'Edit chat successfully', result);
-    }
-  });
-};
-
-exports.deleteChat = (req, res) => {
-  const { id } = req.params;
-  chatModels.deleteChat(id, (result) => {
-    return response(res, 'Profile deleted', result[0]);
-  });
-};

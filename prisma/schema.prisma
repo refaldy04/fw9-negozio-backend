@@ -36,7 +36,6 @@ model categories {
   category_name      String               @db.VarChar
   category_picture   String?              @db.VarChar
   product_categories product_categories[]
-  products           products[]
 }
 
 model chat_content {
@@ -61,13 +60,11 @@ model chats {
 model options {
   id                     Int               @id @default(autoincrement())
   created_at             DateTime?         @default(now()) @db.Timestamptz(6)
-  option_name            String?           @db.VarChar
-  option_color           Int?              @default(1)
-  option_size            Int?              @default(1)
+  option_name            String            @db.VarChar
+  option_color           Int               @default(1)
+  option_size            Int               @default(1)
   option_condition       Boolean
-  option_product_picture String?           @db.VarChar
-  product_id             Int?
-  products               products?         @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  option_product_picture String            @db.VarChar
   product_options        product_options[]
 }
 
@@ -128,10 +125,7 @@ model products {
   product_picture     String               @db.VarChar
   stock               Int
   product_description String?
-  category_id         Int?
-  categories          categories?          @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users               users                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  options             options[]
   product_categories  product_categories[]
   product_options     product_options[]
   reviews             reviews[]
@@ -151,7 +145,7 @@ model users {
   full_name                       String      @db.VarChar
   email                           String      @unique @db.VarChar
   phone_number                    String?     @unique @db.VarChar
-  store_name                      String?     @unique @db.VarChar
+  store_name                      String?     @db.VarChar
   password                        String      @db.VarChar
   role                            Int
   gender                          Boolean?
