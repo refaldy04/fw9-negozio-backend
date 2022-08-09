@@ -27,7 +27,7 @@ model addresses {
   address_details_id Int
   address_details    address_details @relation(fields: [address_details_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users              users           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  order              order[]
+  order_header       order_header[]
 }
 
 model categories {
@@ -69,32 +69,11 @@ model options {
 }
 
 model order {
-  id                Int             @id @default(autoincrement())
-  created_at        DateTime?       @default(now()) @db.Timestamptz(6)
-  address_id        Int
-  product_option_id Int
-  sum_amount        Decimal         @db.Decimal
-  payment_id        Int
-  addresses         addresses       @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  payment           payment         @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  product_options   product_options @relation(fields: [product_option_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  order_details     order_details[]
-}
-
-model order_details {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  order_id   Int
-  status     Int      @default(1)
-  order      order    @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model payment {
-  id           Int       @id @default(autoincrement())
-  created_at   DateTime? @default(now()) @db.Timestamptz(6)
-  payment_logo String    @db.VarChar
-  payment_name String    @db.VarChar
-  order        order[]
+  id           Int            @id @default(autoincrement())
+  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
+  user_id      Int?
+  users        users?         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order_header order_header[]
 }
 
 model product_categories {
@@ -113,7 +92,6 @@ model product_options {
   product_id Int
   options    options   @relation(fields: [option_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   products   products  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  order      order[]
 }
 
 model products {
@@ -126,6 +104,10 @@ model products {
   stock               Int
   product_description String?
   users               users                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  options             options[]
+  order_header        order_header[]
+
   product_categories  product_categories[]
   product_options     product_options[]
   reviews             reviews[]
@@ -155,5 +137,31 @@ model users {
   addresses                       addresses[]
   chats_chats_recipient_idTousers chats[]     @relation("chats_recipient_idTousers")
   chats_chats_sender_idTousers    chats[]     @relation("chats_sender_idTousers")
+  order                           order[]
   products                        products[]
 }
+
+model order_header {
+  id         Int        @id(map: "order_details_pkey") @default(autoincrement())
+  created_at DateTime?  @default(now()) @db.Timestamptz(6)
+  user_id    Int?
+  payment_id Int?
+  status     Int?
+  order_id   Int?
+  address_id Int?
+  product_id Int?
+  addresses  addresses? @relation(fields: [address_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order      order?     @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payment    payment?   @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products   products?  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model payment {
+  id           Int            @id @default(autoincrement())
+  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
+  payment_logo String?        @db.VarChar
+  payment_name String?        @db.VarChar
+  is_payment   Boolean?       @default(false)
+  order_header order_header[]
+}
+

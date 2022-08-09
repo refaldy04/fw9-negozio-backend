@@ -99,7 +99,9 @@ exports.deleteAddress = (id, cb) => {
 };
 
 /// with prisma
+
 exports.createAddressUser = async (id, dataReq) => {
+  console.log(id);
   if (dataReq.is_primary === "false") {
     dataReq.is_primary = false;
   } else {
@@ -142,6 +144,22 @@ exports.updateAddressUser = async (idAddress, data) => {
       id: idAddress,
     },
     data,
+  });
+  return address;
+};
+
+exports.getAddressById = async (idAddress, idUser) => {
+  const address = await prisma.addresses.findMany({
+    where: {
+      user_id: idUser,
+      AND: {
+        address_details_id: idAddress,
+      },
+    },
+    include: {
+      address_details: true,
+      users: true,
+    },
   });
   return address;
 };
